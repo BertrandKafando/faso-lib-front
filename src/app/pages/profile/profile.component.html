@@ -1,0 +1,197 @@
+<app-layout>
+  <div class="container mx-auto px-4 py-10 max-w-4xl">
+
+    <!-- Loading -->
+    <div *ngIf="isLoading()" class="flex justify-center py-20">
+      <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
+    <ng-container *ngIf="!isLoading() && user() as u">
+
+      <!-- Success Toast -->
+      <div *ngIf="successMessage()"
+        class="mb-6 p-4 bg-secondary/10 border border-secondary/20 rounded-2xl text-secondary text-sm font-medium flex items-center gap-2 animate-fade-in-up">
+        ✅ {{ successMessage() }}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage()"
+        class="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-destructive text-sm flex items-center gap-2">
+        ❌ {{ errorMessage() }}
+      </div>
+
+      <!-- Header Card -->
+      <div class="bg-card rounded-3xl border border-border p-8 mb-6 relative overflow-hidden">
+        <!-- Background gradient accent -->
+        <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-primary/10 to-secondary/10"></div>
+
+        <div class="relative flex flex-col sm:flex-row items-start sm:items-end gap-6">
+          <!-- Avatar -->
+          <div class="relative">
+            <div class="w-24 h-24 rounded-2xl overflow-hidden border-4 border-card shadow-xl">
+              <img *ngIf="u.profilePicture" [src]="u.profilePicture" [alt]="u.firstName"
+                   class="w-full h-full object-cover">
+              <div *ngIf="!u.profilePicture"
+                   class="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground text-2xl font-bold">
+                {{ getInitials(u) }}
+              </div>
+            </div>
+            <!-- Upload button -->
+            <label class="absolute -bottom-2 -right-2 w-8 h-8 bg-card border border-border rounded-full flex items-center justify-center cursor-pointer hover:bg-muted transition-colors shadow-md"
+                   [class.opacity-50]="isUploadingPicture()" title="Changer la photo">
+              <input type="file" accept="image/*" (change)="onPictureSelected($event)" class="hidden" [disabled]="isUploadingPicture()">
+              <lucide-icon *ngIf="!isUploadingPicture()" [img]="CameraIcon" class="w-3.5 h-3.5 text-muted-foreground"></lucide-icon>
+              <svg *ngIf="isUploadingPicture()" class="animate-spin w-3.5 h-3.5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+            </label>
+          </div>
+
+          <!-- User Info -->
+          <div class="flex-1">
+            <div class="flex items-center flex-wrap gap-2 mb-1">
+              <h1 class="text-2xl font-bold text-foreground">{{ u.firstName }} {{ u.lastName }}</h1>
+              <span class="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full font-bold uppercase">
+                {{ getRoleLabel(u.role) }}
+              </span>
+              <span *ngIf="u.emailVerified"
+                class="text-xs px-2 py-0.5 bg-secondary/10 text-secondary rounded-full font-medium flex items-center gap-1">
+                <lucide-icon [img]="ShieldCheckIcon" class="w-3 h-3"></lucide-icon>
+                Vérifié
+              </span>
+            </div>
+            <p class="text-muted-foreground text-sm">{{ u.email }}</p>
+            <p *ngIf="u.academicTitle" class="text-muted-foreground text-sm mt-0.5">{{ u.academicTitle }}</p>
+          </div>
+
+          <!-- Edit Button -->
+          <button *ngIf="!isEditing()"
+            (click)="startEdit()"
+            class="flex items-center gap-2 px-4 py-2 border border-border rounded-2xl text-sm font-medium hover:bg-muted transition-all">
+            <lucide-icon [img]="EditIcon" class="w-4 h-4"></lucide-icon>
+            Modifier
+          </button>
+        </div>
+      </div>
+
+      <!-- View Mode -->
+      <div *ngIf="!isEditing()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="bg-card rounded-2xl border border-border p-6">
+          <h3 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+            <lucide-icon [img]="UserIconImg" class="w-3.5 h-3.5"></lucide-icon>
+            Informations personnelles
+          </h3>
+          <div class="space-y-3">
+            <div *ngIf="u.phone" class="flex items-center gap-3 text-sm">
+              <lucide-icon [img]="PhoneIcon" class="w-4 h-4 text-muted-foreground flex-shrink-0"></lucide-icon>
+              <span class="text-foreground">{{ u.phone }}</span>
+            </div>
+            <div *ngIf="u.bio" class="text-sm">
+              <lucide-icon [img]="FileTextIcon" class="w-4 h-4 text-muted-foreground mb-1"></lucide-icon>
+              <p class="text-foreground leading-relaxed">{{ u.bio }}</p>
+            </div>
+            <p *ngIf="!u.phone && !u.bio" class="text-muted-foreground text-sm italic">Aucune information renseignée</p>
+          </div>
+        </div>
+
+        <div class="bg-card rounded-2xl border border-border p-6">
+          <h3 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+            <lucide-icon [img]="BuildingIcon" class="w-3.5 h-3.5"></lucide-icon>
+            Affiliation académique
+          </h3>
+          <div class="space-y-3">
+            <div *ngIf="u.institution" class="flex items-center gap-3 text-sm">
+              <lucide-icon [img]="BuildingIcon" class="w-4 h-4 text-muted-foreground flex-shrink-0"></lucide-icon>
+              <span class="text-foreground">{{ u.institution }}</span>
+            </div>
+            <div *ngIf="u.department" class="flex items-center gap-3 text-sm">
+              <lucide-icon [img]="BookOpenIcon" class="w-4 h-4 text-muted-foreground flex-shrink-0"></lucide-icon>
+              <span class="text-foreground">{{ u.department }}</span>
+            </div>
+            <div *ngIf="u.orcid" class="flex items-center gap-3 text-sm">
+              <lucide-icon [img]="AwardIcon" class="w-4 h-4 text-muted-foreground flex-shrink-0"></lucide-icon>
+              <a [href]="'https://orcid.org/' + u.orcid" target="_blank" class="text-primary hover:underline">{{ u.orcid }}</a>
+            </div>
+            <p *ngIf="!u.institution && !u.department && !u.orcid" class="text-muted-foreground text-sm italic">
+              Aucune affiliation renseignée
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div *ngIf="isEditing()" class="bg-card rounded-3xl border border-border p-8">
+        <h2 class="text-lg font-bold text-foreground mb-6">Modifier le profil</h2>
+
+        <form (ngSubmit)="saveProfile()" class="space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">Prénom</label>
+              <input type="text" [(ngModel)]="editForm.firstName" name="firstName"
+                class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">Nom</label>
+              <input type="text" [(ngModel)]="editForm.lastName" name="lastName"
+                class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">Téléphone</label>
+              <input type="tel" [(ngModel)]="editForm.phone" name="phone"
+                class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">Titre académique</label>
+              <input type="text" [(ngModel)]="editForm.academicTitle" name="academicTitle"
+                placeholder="Dr., Prof., Étudiant..."
+                class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground">
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">Biographie</label>
+            <textarea [(ngModel)]="editForm.bio" name="bio" rows="3"
+              class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground resize-none"></textarea>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">Institution</label>
+              <input type="text" [(ngModel)]="editForm.institution" name="institution"
+                class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">Département</label>
+              <input type="text" [(ngModel)]="editForm.department" name="department"
+                class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground">
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-muted-foreground uppercase mb-1 block">ORCID</label>
+            <input type="text" [(ngModel)]="editForm.orcid" name="orcid" placeholder="0000-0000-0000-0000"
+              class="w-full px-4 py-2.5 bg-muted/30 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none text-sm text-foreground">
+          </div>
+
+          <div class="flex items-center gap-3 pt-2">
+            <button type="submit" [disabled]="isSaving()"
+              class="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground rounded-2xl font-bold text-sm hover:bg-primary/90 transition-all disabled:opacity-50">
+              <lucide-icon *ngIf="!isSaving()" [img]="SaveIcon" class="w-4 h-4"></lucide-icon>
+              <svg *ngIf="isSaving()" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              {{ isSaving() ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+            <button type="button" (click)="cancelEdit()"
+              class="flex items-center gap-2 px-6 py-2.5 border border-border rounded-2xl font-medium text-sm hover:bg-muted transition-all">
+              <lucide-icon [img]="XIcon" class="w-4 h-4"></lucide-icon>
+              Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+    </ng-container>
+  </div>
+</app-layout>

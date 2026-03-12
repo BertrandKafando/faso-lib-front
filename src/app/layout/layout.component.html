@@ -1,0 +1,222 @@
+<div class="min-h-screen bg-background flex flex-col font-sans">
+  <!-- Backdrop for closing dropdown -->
+  <div 
+    *ngIf="isProfileOpen" 
+    class="fixed inset-0 z-[9998]"
+    (click)="isProfileOpen = false"
+  ></div>
+
+  <!-- Profile Dropdown Portal (outside header) -->
+  <div
+    *ngIf="isProfileOpen && authService.user() as user"
+    class="fixed top-16 right-4 w-64 bg-card rounded-2xl shadow-2xl border border-border p-2 z-[9999]"
+  >
+    <div class="px-3 py-3 mb-2 bg-muted/30 rounded-xl">
+      <div class="flex flex-col space-y-1">
+        <p class="text-sm font-bold text-foreground truncate">{{user.firstName}} {{user.lastName}}</p>
+        <div class="flex items-center gap-2">
+          <p class="text-[10px] text-muted-foreground truncate">{{user.email}}</p>
+          <span class="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary rounded font-bold uppercase">{{user.role}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-1">
+      <a routerLink="/profile" (click)="isProfileOpen = false" class="flex items-center rounded-xl px-3 py-2 text-sm font-medium hover:bg-muted text-foreground">
+        <lucide-icon [img]="UserIcon" class="mr-3 h-4 w-4 text-muted-foreground"></lucide-icon>
+        <span>Mon Profil</span>
+      </a>
+      <a *ngIf="user.role === 'ADMIN'" routerLink="/admin" (click)="isProfileOpen = false" class="flex items-center rounded-xl px-3 py-2 text-sm font-medium hover:bg-muted text-foreground">
+        <lucide-icon [img]="LayoutDashboard" class="mr-3 h-4 w-4 text-muted-foreground"></lucide-icon>
+        <span>Administration</span>
+      </a>
+    </div>
+    <div class="h-px bg-border my-2"></div>
+    <button (click)="logout()" class="w-full flex items-center rounded-xl px-3 py-2 text-sm font-bold hover:bg-destructive/10 text-destructive">
+      <lucide-icon [img]="LogOutIcon" class="mr-3 h-4 w-4"></lucide-icon>
+      <span>Déconnexion</span>
+    </button>
+  </div>
+
+  <!-- Header -->
+  <header
+    class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+  >
+    <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+      <a routerLink="/" class="flex items-center gap-2 font-serif font-bold text-2xl text-primary hover:opacity-90 transition-opacity">
+        <lucide-icon [img]="GraduationCap" class="h-8 w-8 text-secondary"></lucide-icon>
+        <span><span [translate]="'APP.NAME_HIGHLIGHT'"></span><span class="text-secondary" [translate]="'APP.NAME_SECONDARY'"></span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6">
+        <a *ngFor="let item of navItems" 
+           [routerLink]="item.href"
+           routerLinkActive="bg-primary/10 text-primary"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="flex items-center gap-2 px-4 py-2 rounded-md transition-colors font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50">
+           <lucide-icon [img]="item.icon" class="w-4 h-4"></lucide-icon>
+           <span [translate]="item.labelKey || 'NAV.HOME'"></span>
+        </a>
+      </nav>
+
+      <!-- User Menu -->
+      <div class="hidden md:flex items-center gap-4">
+        <!-- Theme Toggle -->
+        <app-theme-toggle></app-theme-toggle>
+
+        <!-- Language Switcher -->
+        <div class="flex items-center bg-muted/50 rounded-full p-1 border border-border">
+          <button 
+            (click)="changeLanguage('fr')"
+            [class.bg-card]="translate.currentLang === 'fr'"
+            [class.shadow-sm]="translate.currentLang === 'fr'"
+            [class.text-primary]="translate.currentLang === 'fr'"
+            class="px-2.5 py-1 rounded-full text-[10px] font-bold transition-all text-muted-foreground hover:text-primary"
+          >FR</button>
+          <button 
+            (click)="changeLanguage('en')"
+            [class.bg-card]="translate.currentLang === 'en'"
+            [class.shadow-sm]="translate.currentLang === 'en'"
+            [class.text-primary]="translate.currentLang === 'en'"
+            class="px-2.5 py-1 rounded-full text-[10px] font-bold transition-all text-muted-foreground hover:text-primary"
+          >EN</button>
+        </div>
+
+        <!-- Profile Button -->
+        <div class="relative z-[100]" *ngIf="authService.user() as user; else loginBtn">
+          <button
+            type="button"
+            (click)="toggleProfile(); $event.stopPropagation()"
+            class="flex items-center gap-2 p-1.5 rounded-full hover:bg-muted transition-all border border-border group"
+          >
+            <div class="h-8 w-8 rounded-full overflow-hidden border border-primary/10">
+              <img *ngIf="user.profilePicture" [src]="user.profilePicture" class="h-full w-full object-cover" [alt]="user.firstName || 'User'">
+              <div *ngIf="!user.profilePicture" class="h-full w-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                {{user.firstName[0] || user.email[0] || 'U'}}
+              </div>
+            </div>
+            <div class="hidden sm:block text-left">
+              <p class="text-xs font-bold text-foreground leading-tight">{{ user.firstName }}</p>
+              <p class="text-[10px] text-muted-foreground leading-tight">{{ user.role === 'ADMIN' ? 'Admin' : 'User' }}</p>
+            </div>
+          </button>
+        </div>
+        <ng-template #loginBtn>
+          <p-button styleClass="shadow-md hover:shadow-lg" (click)="login()">
+            <span class="px-3" [translate]="'NAV.LOGIN'"></span>
+          </p-button>
+        </ng-template>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button
+        (click)="toggleMenu()"
+        class="md:hidden inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground h-10 w-10"
+      >
+        <lucide-icon [img]="Menu" class="h-6 w-6"></lucide-icon>
+        <span class="sr-only">Menu</span>
+      </button>
+
+      <!-- Mobile Menu Sheet -->
+      <div *ngIf="isOpen" class="fixed inset-0 z-50 bg-foreground/80 md:hidden" (click)="toggleMenu()">
+        <div
+          class="fixed inset-y-0 right-0 z-50 w-[300px] sm:w-[400px] bg-background p-6 shadow-lg border-l transition-transform duration-300 sm:duration-500 ease-in-out"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex flex-col gap-6 py-4">
+            <a
+              routerLink="/"
+              class="flex items-center gap-2 font-serif font-bold text-2xl text-primary"
+              (click)="toggleMenu()"
+            >
+              <lucide-icon [img]="GraduationCap" class="h-8 w-8 text-secondary"></lucide-icon>
+              <span>{{ 'APP.NAME_HIGHLIGHT' | translate }}<span class="text-secondary">{{ 'APP.NAME_SECONDARY' | translate }}</span></span>
+            </a>
+            <div class="flex flex-col gap-2">
+              <a
+                *ngFor="let item of navItems"
+                [routerLink]="item.href"
+                (click)="toggleMenu()"
+                class="flex items-center gap-2 px-4 py-2 rounded-md transition-colors font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 w-full text-lg"
+              >
+                <lucide-icon [img]="item.icon" class="w-4 h-4"></lucide-icon>
+                <span [translate]="item.labelKey || 'NAV.HOME'"></span>
+              </a>
+
+              <ng-container *ngIf="authService.user() as user; else mobileLogin">
+                <div class="h-px bg-border my-2"></div>
+                <a
+                  routerLink="/profile"
+                  (click)="toggleMenu()"
+                  class="flex items-center gap-2 px-4 py-2 rounded-md transition-colors font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 w-full text-lg"
+                >
+                  <lucide-icon [img]="UserIcon" class="w-4 h-4"></lucide-icon>
+                  <span [translate]="'NAV.PROFILE'"></span>
+                </a>
+                <button
+                  (click)="logout()"
+                  class="flex items-center gap-2 px-4 py-2 rounded-md transition-colors font-medium text-destructive hover:bg-destructive/10 w-full text-lg text-left"
+                >
+                  <lucide-icon [img]="LogOutIcon" class="w-4 h-4"></lucide-icon>
+                  <span [translate]="'NAV.LOGOUT'"></span>
+                </button>
+              </ng-container>
+              <ng-template #mobileLogin>
+                <div class="mt-4">
+                  <button
+                    (click)="login()"
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full shadow-lg"
+                  >
+                    <span [translate]="'NAV.LOGIN'"></span>
+                  </button>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1">
+    <ng-content></ng-content>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t bg-muted/30 text-foreground">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="md:col-span-2">
+          <a
+            routerLink="/"
+            class="flex items-center gap-2 font-serif font-bold text-xl text-primary mb-4"
+          >
+            <lucide-icon [img]="GraduationCap" class="h-6 w-6 text-secondary"></lucide-icon>
+            <span>FasoLib</span>
+          </a>
+          <p class="text-muted-foreground text-sm max-w-sm" [translate]="'FOOTER.DESCRIPTION'"></p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-foreground mb-4" [translate]="'FOOTER.QUICK_LINKS'"></h3>
+          <ul class="space-y-2 text-sm text-muted-foreground">
+            <li><a routerLink="/documents" class="hover:text-primary" [translate]="'NAV.LIBRARY'"></a></li>
+            <li><a routerLink="/deposit" class="hover:text-primary" [translate]="'NAV.DEPOSIT'"></a></li>
+            <li><a routerLink="/profile" class="hover:text-primary" [translate]="'NAV.PROFILE'"></a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold text-foreground mb-4" [translate]="'FOOTER.CONTACT'"></h3>
+          <ul class="space-y-2 text-sm text-muted-foreground">
+            <li [translate]="'FOOTER.ADDRESS'"></li>
+            <li>support@fasolib.bf</li>
+            <li [translate]="'FOOTER.PHONE'"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+        {{ 'APP.COPYRIGHT' | translate:{year: 2024} }}
+      </div>
+    </div>
+  </footer>
+</div>

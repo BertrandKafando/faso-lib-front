@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: fasolib-db
+    environment:
+      - POSTGRES_DB=faso-lib
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fasolib-network
+
+  db-init:
+    build:
+      context: ./script
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_DB=faso-lib
+      - POSTGRES_USER=postgres
+      - PGPASSWORD=postgres
+    depends_on:
+      - db
+    networks:
+      - fasolib-network
+
+  api:
+    build:
+      context: ./api-spring
+      dockerfile: Dockerfile
+    container_name: fasolib-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/faso-lib
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      db:
+        condition: service_started
+      db-init:
+        condition: service_completed_successfully
+    networks:
+      - fasolib-network
+
+  client:
+    build:
+      context: ./client-angular
+      dockerfile: Dockerfile
+    container_name: fasolib-client
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - fasolib-network
+
+networks:
+  fasolib-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

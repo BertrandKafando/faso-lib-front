@@ -1,0 +1,54 @@
+<div class="container mx-auto px-4 py-8">
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-primary/10 rounded-2xl">
+        <lucide-icon [img]="ClipboardPenLine" class="w-8 h-8 text-primary"></lucide-icon>
+      </div>
+      <div>
+        <h1 class="text-3xl font-serif font-bold text-foreground">{{ 'ADMIN.PAGEDISCIPLINES.TITLE' | translate }}</h1>
+        <p class="text-muted-foreground">{{ 'ADMIN.PAGEDISCIPLINES.SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+    <p-button 
+      (click)="openNew()" 
+      styleClass="p-button-primary shadow-lg" 
+      [label]="'ADMIN.PAGEDISCIPLINES.ADD_BUTTON' | translate"
+    >
+      <lucide-icon [img]="Plus" class="w-4 h-4 mr-2"></lucide-icon>
+    </p-button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let item of disciplines" class="bg-card border border-border rounded-2xl p-6 hover:shadow-xl transition-all group flex flex-col justify-between">
+      <div>
+        <div class="flex items-start justify-between mb-4">
+          <div class="h-12 w-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-bold group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+            {{ item.code }}
+          </div>
+          <div class="flex gap-2">
+            <button (click)="editDiscipline(item)" class="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-primary transition-colors">
+              <lucide-icon [img]="Pencil" class="w-4 h-4"></lucide-icon>
+            </button>
+            <button (click)="deleteDiscipline(item)" class="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-destructive transition-colors">
+              <lucide-icon [img]="Trash2" class="w-4 h-4"></lucide-icon>
+            </button>
+          </div>
+        </div>
+        <h3 class="font-bold text-xl mb-2">{{ item.name }}</h3>
+        <p class="text-sm text-muted-foreground line-clamp-3 mb-4">{{ item.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Discipline Form Component -->
+  <app-discipline-form
+    [(visible)]="disciplineDialog"
+    [discipline]="discipline"
+    (onSave)="saveDiscipline($event)"
+  ></app-discipline-form>
+</div>
+
+

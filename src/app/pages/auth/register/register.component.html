@@ -1,0 +1,189 @@
+<div class="min-h-screen bg-background flex items-center justify-center p-4 text-foreground">
+  <div class="max-w-2xl w-full">
+
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 mb-2">
+        <div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
+          <lucide-icon [img]="GraduationCapIcon" class="w-8 h-8"></lucide-icon>
+        </div>
+        <span class="text-2xl font-bold text-foreground">FasoLib</span>
+      </div>
+      <h1 class="text-2xl font-bold text-foreground">Créer un compte</h1>
+      <p class="text-muted-foreground mt-1">Rejoignez la bibliothèque académique du Burkina Faso</p>
+    </div>
+
+    <!-- Success State -->
+    <div *ngIf="success" class="bg-card p-10 rounded-3xl shadow-xl border border-border text-center">
+      <div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
+        <lucide-icon [img]="CheckCircleIcon" class="w-8 h-8 text-secondary"></lucide-icon>
+      </div>
+      <h2 class="text-xl font-bold text-foreground mb-2">Inscription réussie ! 🎉</h2>
+      <p class="text-muted-foreground mb-6">
+        Un email de confirmation a été envoyé à <strong class="text-foreground">{{ email }}</strong>.<br>
+        Cliquez sur le lien dans l'email pour activer votre compte.
+      </p>
+      <a routerLink="/login"
+         class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+        Aller à la connexion
+        <lucide-icon [img]="ChevronRightIcon" class="w-4 h-4"></lucide-icon>
+      </a>
+    </div>
+
+    <!-- Form Card -->
+    <div *ngIf="!success" class="bg-card p-8 rounded-3xl shadow-xl shadow-foreground/5 border border-border">
+
+      <!-- Error -->
+      <div *ngIf="error" class="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-destructive text-sm flex items-start gap-3">
+        <lucide-icon [img]="LockIcon" class="w-4 h-4 mt-0.5 flex-shrink-0"></lucide-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #registerForm="ngForm" class="space-y-5">
+
+        <!-- Section: Compte -->
+        <div>
+          <h2 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+            <lucide-icon [img]="LockIcon" class="w-3.5 h-3.5"></lucide-icon>
+            Informations de connexion
+          </h2>
+          <div class="space-y-4">
+            <!-- Email -->
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                <lucide-icon [img]="MailIcon" class="w-4 h-4"></lucide-icon>
+              </div>
+              <input type="email" name="email" [(ngModel)]="email" required
+                class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                placeholder="Email *">
+            </div>
+            <!-- Password -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                  <lucide-icon [img]="LockIcon" class="w-4 h-4"></lucide-icon>
+                </div>
+                <input type="password" name="password" [(ngModel)]="password" required minlength="8"
+                  class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                  placeholder="Mot de passe * (8 min)">
+              </div>
+              <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors"
+                   [class.text-destructive]="passwordMismatch"
+                   [class.text-muted-foreground]="!passwordMismatch"
+                   [class.group-focus-within:text-primary]="!passwordMismatch">
+                  <lucide-icon [img]="LockIcon" class="w-4 h-4"></lucide-icon>
+                </div>
+                <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required
+                  class="w-full pl-11 pr-4 py-3 bg-muted/30 border rounded-2xl focus:bg-card focus:ring-4 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                  [class.border-destructive]="passwordMismatch"
+                  [class.focus:border-destructive]="passwordMismatch"
+                  [class.focus:ring-destructive/10]="passwordMismatch"
+                  [class.border-border]="!passwordMismatch"
+                  [class.focus:border-primary]="!passwordMismatch"
+                  [class.focus:ring-primary/10]="!passwordMismatch"
+                  placeholder="Confirmer *">
+              </div>
+            </div>
+            <p *ngIf="passwordMismatch" class="text-xs text-destructive ml-1">Les mots de passe ne correspondent pas.</p>
+          </div>
+        </div>
+
+        <div class="h-px bg-border"></div>
+
+        <!-- Section: Identité -->
+        <div>
+          <h2 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+            <lucide-icon [img]="UserIcon" class="w-3.5 h-3.5"></lucide-icon>
+            Informations personnelles
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                <lucide-icon [img]="UserIcon" class="w-4 h-4"></lucide-icon>
+              </div>
+              <input type="text" name="firstName" [(ngModel)]="firstName" required
+                class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                placeholder="Prénom *">
+            </div>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                <lucide-icon [img]="UserIcon" class="w-4 h-4"></lucide-icon>
+              </div>
+              <input type="text" name="lastName" [(ngModel)]="lastName" required
+                class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                placeholder="Nom *">
+            </div>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                <lucide-icon [img]="PhoneIcon" class="w-4 h-4"></lucide-icon>
+              </div>
+              <input type="tel" name="phone" [(ngModel)]="phone"
+                class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                placeholder="Téléphone">
+            </div>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                <lucide-icon [img]="AwardIcon" class="w-4 h-4"></lucide-icon>
+              </div>
+              <input type="text" name="academicTitle" [(ngModel)]="academicTitle"
+                class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                placeholder="Titre (Dr., Prof., Étudiant...)">
+            </div>
+          </div>
+        </div>
+
+        <div class="h-px bg-border"></div>
+
+        <!-- Section: Académique -->
+        <div>
+          <h2 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+            <lucide-icon [img]="BuildingIcon" class="w-3.5 h-3.5"></lucide-icon>
+            Affiliation académique <span class="text-muted-foreground/50 normal-case font-normal">(optionnel)</span>
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                <lucide-icon [img]="BuildingIcon" class="w-4 h-4"></lucide-icon>
+              </div>
+              <input type="text" name="institution" [(ngModel)]="institution"
+                class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                placeholder="Institution / Université">
+            </div>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
+                <lucide-icon [img]="BookOpenIcon" class="w-4 h-4"></lucide-icon>
+              </div>
+              <input type="text" name="department" [(ngModel)]="department"
+                class="w-full pl-11 pr-4 py-3 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground text-sm"
+                placeholder="Faculté / Département">
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          [disabled]="isLoading || !registerForm.form.valid || passwordMismatch"
+          class="w-full py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2">
+          <span *ngIf="!isLoading" class="flex items-center gap-2">
+            Créer mon compte
+            <lucide-icon [img]="ChevronRightIcon" class="w-5 h-5"></lucide-icon>
+          </span>
+          <span *ngIf="isLoading" class="flex items-center gap-2">
+            <svg class="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Création en cours...
+          </span>
+        </button>
+
+        <p class="text-center text-sm text-muted-foreground">
+          Déjà inscrit ?
+          <a routerLink="/login" class="font-bold text-primary hover:underline transition-colors">Se connecter</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

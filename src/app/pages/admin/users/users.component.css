@@ -1,0 +1,102 @@
+/* ─── PrimeNG DataTable — Theme Integration ─── */
+
+/* Table surface */
+:host ::ng-deep .p-datatable {
+    background: transparent;
+    color: hsl(var(--foreground));
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    background: hsl(var(--muted) / 0.3);
+    color: hsl(var(--muted-foreground));
+    border-color: hsl(var(--border));
+    border-bottom: 1px solid hsl(var(--border));
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+    background: transparent;
+    color: hsl(var(--foreground));
+    transition: background-color 0.15s ease;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 1rem 1.5rem;
+    border-color: hsl(var(--border) / 0.5);
+    color: hsl(var(--foreground));
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+    background: hsl(var(--muted) / 0.1);
+}
+
+/* Paginator */
+:host ::ng-deep .p-paginator {
+    background: hsl(var(--muted) / 0.15);
+    border-color: hsl(var(--border));
+    color: hsl(var(--muted-foreground));
+    padding: 0.75rem 1.5rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-page,
+:host ::ng-deep .p-paginator .p-paginator-first,
+:host ::ng-deep .p-paginator .p-paginator-prev,
+:host ::ng-deep .p-paginator .p-paginator-next,
+:host ::ng-deep .p-paginator .p-paginator-last {
+    color: hsl(var(--muted-foreground));
+    border-radius: 0.5rem;
+    min-width: 2rem;
+    height: 2rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-page:hover,
+:host ::ng-deep .p-paginator .p-paginator-first:hover,
+:host ::ng-deep .p-paginator .p-paginator-prev:hover,
+:host ::ng-deep .p-paginator .p-paginator-next:hover,
+:host ::ng-deep .p-paginator .p-paginator-last:hover {
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+}
+
+:host ::ng-deep .p-paginator .p-paginator-page.p-highlight {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
+}
+
+:host ::ng-deep .p-paginator .p-paginator-current {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+}
+
+:host ::ng-deep .p-paginator .p-dropdown {
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
+    border-radius: 0.5rem;
+}
+
+/* Loading spinner */
+:host ::ng-deep .p-datatable .p-datatable-loading-overlay {
+    background: hsl(var(--background) / 0.7);
+    backdrop-filter: blur(4px);
+}
+
+:host ::ng-deep .p-datatable .p-datatable-loading-icon {
+    color: hsl(var(--primary));
+}
+
+/* Tags */
+:host ::ng-deep .p-tag {
+    padding: 0.25rem 0.625rem;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 0.5rem;
+}
+
+/* Toast */
+:host ::ng-deep .p-toast .p-toast-message {
+    border-radius: 1rem;
+    backdrop-filter: blur(12px);
+}

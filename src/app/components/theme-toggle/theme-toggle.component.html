@@ -1,0 +1,28 @@
+<button
+  (click)="toggle()"
+  class="relative inline-flex items-center justify-center w-16 h-8 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+  [class]="isDark() ? 'bg-primary/20 border border-primary/30' : 'bg-muted border border-border'"
+  [attr.aria-label]="isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
+  role="switch"
+  [attr.aria-checked]="isDark()"
+>
+  <!-- Track icons -->
+  <span class="absolute left-1.5 text-highlight transition-opacity duration-200"
+        [class.opacity-100]="!isDark()" [class.opacity-0]="isDark()">
+    <lucide-icon [img]="SunIcon" class="w-4 h-4"></lucide-icon>
+  </span>
+  <span class="absolute right-1.5 text-primary transition-opacity duration-200"
+        [class.opacity-100]="isDark()" [class.opacity-0]="!isDark()">
+    <lucide-icon [img]="MoonIcon" class="w-4 h-4"></lucide-icon>
+  </span>
+
+  <!-- Thumb -->
+  <span
+    class="absolute top-0.5 w-7 h-7 rounded-full shadow-md transition-all duration-300 flex items-center justify-center"
+    [class]="isDark()
+      ? 'translate-x-4 bg-primary text-primary-foreground'
+      : '-translate-x-4 bg-card text-foreground'"
+  >
+    <lucide-icon [img]="isDark() ? MoonIcon : SunIcon" class="w-3.5 h-3.5"></lucide-icon>
+  </span>
+</button>

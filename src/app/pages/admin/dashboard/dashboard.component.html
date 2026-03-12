@@ -1,0 +1,133 @@
+<div class="space-y-8 text-foreground">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-bold text-foreground tracking-tight">Tableau de Bord</h1>
+      <p class="text-muted-foreground mt-1">Bienvenue dans votre espace d'administration.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="px-4 py-2 bg-card border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors shadow-sm">
+        Télécharger Rapport
+      </button>
+      <button class="px-4 py-2 bg-primary rounded-xl text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+        Nouveau Document
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let stat of stats" class="bg-card p-6 rounded-2xl border border-border shadow-sm hover:shadow-md transition-shadow group">
+      <div class="flex justify-between items-start">
+        <div [class]="'p-3 rounded-xl shadow-lg ' + stat.color">
+          <lucide-icon [img]="stat.icon" class="w-6 h-6"></lucide-icon>
+        </div>
+        <div [class]="'flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ' + (stat.isPositive ? 'bg-secondary/10 text-secondary' : 'bg-destructive/10 text-destructive')">
+          <lucide-icon [img]="stat.isPositive ? ArrowUpRightIcon : ArrowDownRightIcon" class="w-3 h-3"></lucide-icon>
+          {{stat.change}}
+        </div>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-muted-foreground text-sm font-medium">{{stat.title}}</h3>
+        <p class="text-2xl font-bold text-foreground mt-1">{{stat.value}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Chart / Content Area -->
+    <div class="lg:col-span-2 space-y-8">
+      <!-- Top Documents -->
+      <div class="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-border flex justify-between items-center">
+          <h2 class="font-bold text-foreground">Documents les plus consultés</h2>
+          <button class="text-primary text-sm font-bold hover:underline">Voir tout</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-muted/30">
+                <th class="px-6 py-3 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Document</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Catégorie</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Téléchargements</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Tendance</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+              <tr *ngFor="let doc of topDocuments" class="hover:bg-muted/20 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-muted flex items-center justify-center">
+                      <lucide-icon [img]="FilesIcon" class="w-4 h-4 text-muted-foreground"></lucide-icon>
+                    </div>
+                    <span class="text-sm font-medium text-foreground">{{doc.name}}</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 bg-muted text-muted-foreground rounded-md text-xs font-medium">{{doc.category}}</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                  {{doc.downloads}}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span [class]="'text-xs font-bold ' + (doc.growth > 0 ? 'text-secondary' : 'text-destructive')">
+                    {{doc.growth > 0 ? '+' : ''}}{{doc.growth}}%
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quick Actions Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <button class="flex flex-col items-center justify-center p-6 bg-card border border-border rounded-2xl hover:border-primary/30 hover:shadow-lg transition-all gap-3 group">
+          <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+            <lucide-icon [img]="DashboardIcon" class="w-6 h-6"></lucide-icon>
+          </div>
+          <span class="text-sm font-bold text-foreground">Audit Système</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar Activity -->
+    <div class="space-y-8">
+      <div class="bg-card p-6 rounded-2xl border border-border shadow-sm">
+        <h2 class="font-bold text-foreground mb-6 flex items-center gap-2">
+          Activités Récentes
+          <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+        </h2>
+        <div class="flow-root">
+          <ul class="-mb-8">
+            <li *ngFor="let activity of recentActivities; let last = last" class="relative pb-8">
+              <span *ngIf="!last" class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-border" aria-hidden="true"></span>
+              <div class="relative flex space-x-3">
+                <div>
+                  <div class="h-8 w-8 rounded-full bg-muted border-2 border-card flex items-center justify-center">
+                    <div class="w-2 h-2 rounded-full bg-muted-foreground"></div>
+                  </div>
+                </div>
+                <div class="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+                  <div>
+                    <p class="text-sm text-muted-foreground">
+                      <span class="font-bold text-foreground">{{activity.user}}</span>
+                      {{activity.action}}
+                      <span class="font-medium text-primary">{{activity.target}}</span>
+                    </p>
+                  </div>
+                  <div class="whitespace-nowrap text-right text-xs text-muted-foreground">
+                    {{activity.time}}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <button class="w-full mt-6 py-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors border-t border-border pt-4">
+          Voir tout l'historique
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

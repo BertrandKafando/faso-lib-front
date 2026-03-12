@@ -1,0 +1,121 @@
+<app-layout>
+  <!-- Hero Section -->
+  <section class="relative bg-primary overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+      <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-secondary blur-3xl"></div>
+      <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-accent blur-3xl"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+      <div class="max-w-3xl mx-auto text-center space-y-8">
+        <div class="animate-fade-in-up" style="opacity: 0">
+          <h1 class="text-4xl md:text-6xl font-serif font-bold text-primary-foreground mb-6 leading-tight" [innerHTML]="'HOME.HERO_TITLE' | translate"></h1>
+          <p class="text-lg md:text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
+            {{ 'HOME.HERO_SUBTITLE' | translate }}
+          </p>
+        </div>
+
+        <div class="animate-fade-in-up flex flex-col sm:flex-row gap-4 justify-center items-center" style="animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="relative w-full max-w-md">
+            <lucide-icon [img]="Search" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"></lucide-icon>
+            <input 
+              type="text"
+              [placeholder]="'HOME.SEARCH_PLACEHOLDER' | translate" 
+              class="flex w-full bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 h-12 rounded-full border-none shadow-xl text-base"
+              [(ngModel)]="searchQuery"
+              (keydown)="onEnter($event)"
+            />
+          </div>
+          <a [routerLink]="['/documents']" [queryParams]="{search: searchQuery}">
+            <p-button styleClass="h-12 rounded-full px-8 bg-secondary hover:bg-secondary/90 border-0 shadow-lg hover:shadow-xl transition-all">
+                <span [translate]="'HOME.SEARCH_BUTTON'"></span>
+            </p-button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 bg-card">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="p-8 rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6">
+            <lucide-icon [img]="BookOpen" class="w-6 h-6"></lucide-icon>
+          </div>
+          <h3 class="text-xl font-bold mb-3" [translate]="'HOME.FEATURE_1_TITLE'"></h3>
+          <p class="text-muted-foreground leading-relaxed" [translate]="'HOME.FEATURE_1_DESC'"></p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="p-8 rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6">
+            <lucide-icon [img]="Upload" class="w-6 h-6"></lucide-icon>
+          </div>
+          <h3 class="text-xl font-bold mb-3" [translate]="'HOME.FEATURE_2_TITLE'"></h3>
+          <p class="text-muted-foreground leading-relaxed" [translate]="'HOME.FEATURE_2_DESC'"></p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="p-8 rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6">
+            <lucide-icon [img]="Users" class="w-6 h-6"></lucide-icon>
+          </div>
+          <h3 class="text-xl font-bold mb-3" [translate]="'HOME.FEATURE_3_TITLE'"></h3>
+          <p class="text-muted-foreground leading-relaxed" [translate]="'HOME.FEATURE_3_DESC'"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Documents -->
+  <section class="py-20 bg-muted/30">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-end mb-10">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-primary" [translate]="'HOME.LATEST_ADDITIONS'"></h2>
+          <p class="text-muted-foreground mt-2" [translate]="'HOME.LATEST_ADDITIONS_SUB'"></p>
+        </div>
+        <a routerLink="/documents" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 text-primary hover:text-primary/80 hidden sm:flex gap-2">
+          <span [translate]="'HOME.VIEW_ALL'"></span> <lucide-icon [img]="ChevronRight" class="w-4 h-4"></lucide-icon>
+        </a>
+      </div>
+
+      <div *ngIf="isLoading; else list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="h-80 bg-muted rounded-xl animate-pulse"></div>
+      </div>
+      <ng-template #list>
+         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+           <app-document-card *ngFor="let doc of recentDocs" [document]="doc"></app-document-card>
+         </div>
+      </ng-template>
+      
+      <div class="mt-8 text-center sm:hidden">
+         <a routerLink="/documents" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+           <span [translate]="'HOME.VIEW_CATALOG'"></span>
+         </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-primary text-primary-foreground text-center">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6" [translate]="'HOME.CTA_TITLE'"></h2>
+      <p class="text-lg text-primary-foreground/80 mb-8" [translate]="'HOME.CTA_DESC'"></p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/api/login">
+          <p-button styleClass="bg-card text-primary hover:bg-card/90 font-bold h-14 px-8 rounded-full shadow-lg border-0">
+             <span [translate]="'HOME.CREATE_ACCOUNT'"></span>
+          </p-button>
+        </a>
+        <a routerLink="/documents">
+          <p-button styleClass="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 font-bold h-14 px-8 rounded-full" [outlined]="true">
+            <span [translate]="'HOME.EXPLORE_LIBRARY'"></span>
+          </p-button>
+        </a>
+      </div>
+    </div>
+  </section>
+</app-layout>

@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-background flex items-center justify-center p-4 text-foreground">
+  <div class="max-w-md w-full">
+    <!-- Logo & Title -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 mb-2">
+        <div
+          class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20"
+        >
+          <lucide-icon [img]="GraduationCapIcon" class="w-8 h-8"></lucide-icon>
+        </div>
+        <span class="text-2xl font-bold text-foreground">FasoLib</span>
+      </div>
+      <h1 class="text-2xl font-bold text-foreground">Bienvenue</h1>
+      <p class="text-muted-foreground mt-2">Connectez-vous pour accéder à votre espace.</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-card p-8 rounded-3xl shadow-xl shadow-foreground/5 border border-border">
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-6">
+        <!-- Error Alert -->
+        <div
+          *ngIf="error"
+          class="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-destructive text-sm flex items-start gap-3"
+        >
+          <lucide-icon [img]="LockIcon" class="w-4 h-4 mt-0.5 flex-shrink-0"></lucide-icon>
+          <span>{{ error }}</span>
+        </div>
+
+        <!-- Email -->
+        <div class="space-y-2">
+          <label class="text-sm font-bold text-foreground/80 ml-1">Email</label>
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors"
+            >
+              <lucide-icon [img]="MailIcon" class="w-5 h-5"></lucide-icon>
+            </div>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              class="w-full pl-12 pr-4 py-3.5 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground"
+              placeholder="vous@exemple.com"
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center px-1">
+            <label class="text-sm font-bold text-foreground/80">Mot de passe</label>
+            <a
+              routerLink="/forgot-password"
+              class="text-xs font-bold text-primary hover:text-primary/80 transition-colors"
+              >Oublié ?</a
+            >
+          </div>
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors"
+            >
+              <lucide-icon [img]="LockIcon" class="w-5 h-5"></lucide-icon>
+            </div>
+            <input
+              type="password"
+              name="password"
+              [(ngModel)]="password"
+              required
+              class="w-full pl-12 pr-4 py-3.5 bg-muted/30 border border-border rounded-2xl focus:bg-card focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-foreground placeholder:text-muted-foreground"
+              placeholder="••••••••"
+            />
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          [disabled]="isLoading || !loginForm.form.valid"
+          class="w-full py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          <span *ngIf="!isLoading" class="flex items-center gap-2">
+            Se connecter
+            <lucide-icon [img]="LogInIcon" class="w-5 h-5"></lucide-icon>
+          </span>
+          <span *ngIf="isLoading" class="flex items-center gap-2">
+            <svg
+              class="animate-spin h-5 w-5 text-current"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Connexion...
+          </span>
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <p class="text-center text-sm text-muted-foreground mt-8">
+        Pas encore de compte ?
+        <a routerLink="/register" class="font-bold text-primary hover:underline transition-colors"
+          >Créer un compte</a
+        >
+      </p>
+    </div>
+  </div>
+</div>

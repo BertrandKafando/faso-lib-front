@@ -1,0 +1,162 @@
+/*
+ * ============================================
+ *  FasoLib — Design System Color Palette
+ * ============================================
+ *
+ *  Couleurs inspirées du drapeau du Burkina Faso 🇧🇫
+ *  Vert / Rouge / Jaune + Bleu Académique
+ *
+ *  Usage: toutes les couleurs du projet passent par
+ *  ces CSS custom properties. Ne jamais utiliser de
+ *  couleurs hardcodées (hex, rgb, etc.) dans les
+ *  composants.
+ *
+ *  Format HSL sans fonction: "H S% L%"
+ *  → consommé via hsl(var(--xxx) / <alpha>)
+ * ============================================
+ */
+
+:root {
+  /* ─── BRAND COLORS ─── */
+  --color-brand-blue: 222 47% 30%;       /* #283D70 — Bleu Académique (primary) */
+  --color-brand-green: 142 76% 36%;      /* #16A34A — Vert Faso */
+  --color-brand-red: 355 85% 55%;        /* #E4233C — Rouge Faso */
+  --color-brand-yellow: 48 96% 53%;      /* #F5B40A — Jaune Faso */
+
+  /* ─── SEMANTIC: STATUS ─── */
+  --color-success: 142 76% 36%;          /* = brand green */
+  --color-warning: 48 96% 53%;           /* = brand yellow */
+  --color-error: 0 84% 60%;              /* #EF4444 */
+  --color-info: 222 47% 30%;             /* = brand blue */
+}
+
+/* =============================================
+ *  LIGHT MODE (default)
+ * ============================================= */
+:root {
+  /* ─── SURFACES ─── */
+  --background: 210 20% 98%;             /* #F6F8FA */
+  --foreground: 222 47% 11%;             /* #0F172A */
+
+  --card: 0 0% 100%;                     /* #FFFFFF */
+  --card-foreground: 222 47% 11%;
+  --card-border: 214 32% 91%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 214 32% 91%;
+
+  --muted: 210 40% 96%;                  /* #F1F5F9 */
+  --muted-foreground: 215 16% 47%;       /* #6B7280 */
+  --muted-border: 214 32% 91%;
+
+  /* ─── PRIMARY — Bleu Académique ─── */
+  --primary: var(--color-brand-blue);
+  --primary-foreground: 210 40% 98%;
+  --primary-border: 222 47% 25%;
+
+  /* ─── SECONDARY — Vert Faso ─── */
+  --secondary: var(--color-brand-green);
+  --secondary-foreground: 355 100% 97%;
+  --secondary-border: 142 76% 30%;
+
+  /* ─── ACCENT — Rouge Faso ─── */
+  --accent: var(--color-brand-red);
+  --accent-foreground: 210 40% 98%;
+  --accent-border: 355 85% 50%;
+
+  /* ─── HIGHLIGHT — Jaune Faso ─── */
+  --highlight: var(--color-brand-yellow);
+  --highlight-foreground: 222 47% 11%;
+
+  /* ─── DESTRUCTIVE ─── */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+  --destructive-border: 0 84% 50%;
+
+  /* ─── BORDERS & INPUTS ─── */
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: var(--color-brand-blue);
+
+  /* ─── SIDEBAR ─── */
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 222 47% 11%;
+  --sidebar-border: 214 32% 91%;
+  --sidebar-ring: var(--color-brand-blue);
+
+  /* ─── CHARTS ─── */
+  --chart-1: var(--color-brand-blue);
+  --chart-2: var(--color-brand-green);
+  --chart-3: var(--color-brand-red);
+  --chart-4: var(--color-brand-yellow);
+  --chart-5: 262 60% 55%;                /* Violet complémentaire */
+
+  /* ─── MISC ─── */
+  --radius: 0.75rem;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Libre Baskerville', serif;
+}
+
+/* =============================================
+ *  DARK MODE
+ * ============================================= */
+.dark {
+  /* ─── SURFACES ─── */
+  --background: 222 47% 4%;              /* #060A14 */
+  --foreground: 210 40% 98%;             /* #F8FAFC */
+
+  --card: 222 47% 7%;                    /* #0C1425 */
+  --card-foreground: 210 40% 98%;
+  --card-border: 222 40% 14%;
+
+  --popover: 222 47% 7%;
+  --popover-foreground: 210 40% 98%;
+  --popover-border: 222 40% 14%;
+
+  --muted: 222 47% 12%;                  /* #141E36 */
+  --muted-foreground: 215 20% 65%;       /* #94A3B8 */
+  --muted-border: 222 47% 18%;
+
+  /* ─── PRIMARY — Bleu clair en dark ─── */
+  --primary: 213 94% 68%;                /* #5B9BF5 */
+  --primary-foreground: 222 47% 6%;
+  --primary-border: 213 94% 60%;
+
+  /* ─── SECONDARY — Vert Faso (plus vif) ─── */
+  --secondary: 142 70% 50%;              /* #34D46C */
+  --secondary-foreground: 222 47% 6%;
+  --secondary-border: 142 70% 42%;
+
+  /* ─── ACCENT — Rouge Faso (plus doux) ─── */
+  --accent: 355 80% 62%;                 /* #E85D6F */
+  --accent-foreground: 210 40% 98%;
+  --accent-border: 355 80% 55%;
+
+  /* ─── HIGHLIGHT — Jaune Faso ─── */
+  --highlight: 48 96% 58%;               /* #F7C231 */
+  --highlight-foreground: 222 47% 6%;
+
+  /* ─── DESTRUCTIVE ─── */
+  --destructive: 0 63% 45%;
+  --destructive-foreground: 210 40% 98%;
+  --destructive-border: 0 63% 38%;
+
+  /* ─── BORDERS & INPUTS ─── */
+  --border: 222 40% 14%;
+  --input: 222 40% 14%;
+  --ring: 213 94% 68%;
+
+  /* ─── SIDEBAR ─── */
+  --sidebar: 222 47% 5%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-border: 222 40% 14%;
+  --sidebar-ring: 213 94% 68%;
+
+  /* ─── CHARTS ─── */
+  --chart-1: 213 94% 68%;
+  --chart-2: 142 70% 50%;
+  --chart-3: 355 80% 62%;
+  --chart-4: 48 96% 58%;
+  --chart-5: 262 60% 65%;
+}

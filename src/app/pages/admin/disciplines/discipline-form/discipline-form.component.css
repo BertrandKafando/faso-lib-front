@@ -1,0 +1,10 @@
+.field label {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+input[pInputText], textarea[pInputTextarea] {
+  width: 100%;
+}

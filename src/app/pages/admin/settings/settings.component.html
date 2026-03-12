@@ -1,0 +1,88 @@
+<div class="p-6">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <lucide-icon [img]="SettingsIcon" class="w-5 h-5 text-muted-foreground"></lucide-icon>
+      <h1 class="text-xl font-bold text-foreground">Paramètres de la Plateforme</h1>
+    </div>
+    <button (click)="loadSettings()" class="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-xl hover:bg-muted transition-all">
+      <lucide-icon [img]="RefreshIcon" class="w-4 h-4"></lucide-icon>
+      Actualiser
+    </button>
+  </div>
+
+  <!-- Success -->
+  <div *ngIf="successMessage()" class="mb-4 p-3 bg-secondary/10 border border-secondary/20 rounded-xl text-secondary text-sm">
+    ✅ {{ successMessage() }}
+  </div>
+  <!-- Error -->
+  <div *ngIf="errorMessage()" class="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive text-sm">
+    ❌ {{ errorMessage() }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading()" class="flex justify-center py-12">
+    <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!isLoading()" class="bg-card rounded-2xl border border-border overflow-hidden">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-border bg-muted/30">
+          <th class="text-left px-4 py-3 font-bold text-muted-foreground uppercase text-xs tracking-wider">Clé</th>
+          <th class="text-left px-4 py-3 font-bold text-muted-foreground uppercase text-xs tracking-wider">Valeur</th>
+          <th class="text-left px-4 py-3 font-bold text-muted-foreground uppercase text-xs tracking-wider hidden md:table-cell">Type</th>
+          <th class="text-left px-4 py-3 font-bold text-muted-foreground uppercase text-xs tracking-wider hidden lg:table-cell">Description</th>
+          <th class="text-center px-4 py-3 font-bold text-muted-foreground uppercase text-xs tracking-wider">Public</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let setting of settings(); let i = index"
+            class="border-b border-border last:border-0 hover:bg-muted/20 transition-colors"
+            [class.bg-primary/5]="editingId() === setting.id">
+          <td class="px-4 py-3">
+            <code class="text-xs bg-muted px-2 py-0.5 rounded font-mono text-foreground">{{ setting.key }}</code>
+          </td>
+          <td class="px-4 py-3">
+            <!-- Editing -->
+            <div *ngIf="editingId() === setting.id" class="flex items-center gap-2">
+              <input type="text" [(ngModel)]="editValue"
+                class="flex-1 px-3 py-1.5 bg-background border border-primary rounded-lg text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20">
+              <button (click)="saveEdit(setting)"
+                class="p-1.5 bg-secondary/10 text-secondary rounded-lg hover:bg-secondary/20 transition-colors">
+                <lucide-icon [img]="SaveIcon" class="w-3.5 h-3.5"></lucide-icon>
+              </button>
+              <button (click)="cancelEdit()"
+                class="p-1.5 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 transition-colors">
+                <lucide-icon [img]="XIcon" class="w-3.5 h-3.5"></lucide-icon>
+              </button>
+            </div>
+            <!-- Display -->
+            <span *ngIf="editingId() !== setting.id" class="text-foreground font-medium">{{ setting.value }}</span>
+          </td>
+          <td class="px-4 py-3 hidden md:table-cell">
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium"
+                  [ngClass]="getDataTypeClass(setting.dataType)">
+              {{ setting.dataType }}
+            </span>
+          </td>
+          <td class="px-4 py-3 hidden lg:table-cell">
+            <span class="text-muted-foreground">{{ setting.description || '—' }}</span>
+          </td>
+          <td class="px-4 py-3 text-center">
+            <span *ngIf="setting.isPublic" class="text-secondary text-lg">✓</span>
+            <span *ngIf="!setting.isPublic" class="text-muted-foreground/40 text-lg">—</span>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <button *ngIf="editingId() !== setting.id"
+              (click)="startEdit(setting)"
+              class="p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all">
+              <lucide-icon [img]="EditIcon" class="w-3.5 h-3.5"></lucide-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

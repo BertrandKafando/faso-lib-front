@@ -1,0 +1,8 @@
+/* Dashboard specific styles */
+:host {
+  display: block;
+}
+
+.stat-card-gradient {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+}

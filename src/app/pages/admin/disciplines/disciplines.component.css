@@ -1,0 +1,20 @@
+/* DisciplinesComponent Styles */
+.field label {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+input[pInputText], textarea[pInputTextarea] {
+  width: 100%;
+}
+
+.bg-card {
+  transition: transform 0.2s ease-in-out, shadow 0.2s ease-in-out;
+}
+
+.bg-card:hover {
+  transform: translateY(-4px);
+}
+

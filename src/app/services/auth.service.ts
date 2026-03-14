@@ -36,7 +36,7 @@ export class AuthService {
 
   // Reactive signals
   user = signal<User | null>(this.getStoredUser());
-  isAuthenticated = computed(() => this.user() !== null);
+  isAuthenticated = computed(() => this.user() !== null && !this.isTokenExpired());
   isAdmin = computed(() => this.user()?.role === 'ADMIN');
   isLoading = signal<boolean>(false);
 
@@ -56,7 +56,29 @@ export class AuthService {
 
   private getStoredUser(): User | null {
     const stored = localStorage.getItem(this.USER_KEY);
-    return stored ? JSON.parse(stored) : null;
+    const token = localStorage.getItem(this.TOKEN_KEY);
+
+    if (!stored || !token || this.isTokenExpiredRaw(token)) {
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem(this.USER_KEY);
+      return null;
+    }
+
+    return JSON.parse(stored);
+  }
+
+  isTokenExpired(): boolean {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    return !token || this.isTokenExpiredRaw(token);
+  }
+
+  private isTokenExpiredRaw(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
   }
 
   clearSession(): void {

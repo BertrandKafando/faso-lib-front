@@ -34,3 +34,289 @@
     box-shadow: 0 10px 30px -10px hsl(var(--foreground) / 0.1);
   }
 }
+
+/* ==============================================
+ *  PrimeNG — Global Theme Override
+ *  Mappe les tokens PrimeNG sur notre design system
+ * ============================================== */
+
+/* ─── Tokens CSS PrimeNG → nos variables ─── */
+:root {
+  /* Inputs & Textarea */
+  --p-inputtext-background: hsl(var(--background));
+  --p-inputtext-color: hsl(var(--foreground));
+  --p-inputtext-border-color: hsl(var(--border));
+  --p-inputtext-border-radius: var(--radius);
+  --p-inputtext-hover-border-color: hsl(var(--primary) / 0.5);
+  --p-inputtext-focus-border-color: hsl(var(--primary));
+  --p-inputtext-focus-ring-color: hsl(var(--primary) / 0.12);
+  --p-inputtext-focus-ring-width: 3px;
+  --p-inputtext-invalid-border-color: hsl(var(--destructive));
+  --p-inputtext-placeholder-color: hsl(var(--muted-foreground));
+
+  /* Dialog */
+  --p-dialog-background: hsl(var(--card));
+  --p-dialog-color: hsl(var(--foreground));
+  --p-dialog-border-color: hsl(var(--border));
+  --p-dialog-border-radius: calc(var(--radius) * 1.5);
+  --p-dialog-header-background: hsl(var(--card));
+  --p-dialog-header-color: hsl(var(--foreground));
+  --p-dialog-header-border-color: hsl(var(--border));
+  --p-dialog-content-background: hsl(var(--card));
+  --p-dialog-content-color: hsl(var(--foreground));
+  --p-dialog-footer-background: hsl(var(--card));
+  --p-dialog-footer-border-color: hsl(var(--border));
+
+  /* Overlay / Mask */
+  --p-overlay-modal-background: hsl(var(--card));
+  --p-overlay-modal-color: hsl(var(--foreground));
+  --p-overlay-modal-border-color: hsl(var(--border));
+  --p-overlay-modal-border-radius: calc(var(--radius) * 1.5);
+
+  /* Select / Dropdown */
+  --p-select-background: hsl(var(--background));
+  --p-select-color: hsl(var(--foreground));
+  --p-select-border-color: hsl(var(--border));
+  --p-select-border-radius: var(--radius);
+  --p-select-hover-border-color: hsl(var(--primary) / 0.5);
+  --p-select-focus-border-color: hsl(var(--primary));
+  --p-select-overlay-background: hsl(var(--card));
+  --p-select-overlay-color: hsl(var(--foreground));
+  --p-select-overlay-border-color: hsl(var(--border));
+  --p-select-option-selected-background: hsl(var(--primary) / 0.1);
+  --p-select-option-selected-color: hsl(var(--primary));
+  --p-select-option-focus-background: hsl(var(--muted));
+
+  /* Buttons */
+  --p-button-primary-background: hsl(var(--primary));
+  --p-button-primary-color: hsl(var(--primary-foreground));
+  --p-button-primary-border-color: hsl(var(--primary));
+  --p-button-primary-hover-background: hsl(var(--primary) / 0.85);
+  --p-button-primary-hover-border-color: hsl(var(--primary) / 0.85);
+  --p-button-primary-hover-color: hsl(var(--primary-foreground));
+
+  /* Toast */
+  --p-toast-border-radius: 1rem;
+  --p-toast-background: hsl(var(--card));
+  --p-toast-color: hsl(var(--foreground));
+  --p-toast-border-color: hsl(var(--border));
+
+  /* Confirm Dialog */
+  --p-confirmdialog-background: hsl(var(--card));
+  --p-confirmdialog-color: hsl(var(--foreground));
+  --p-confirmdialog-border-color: hsl(var(--border));
+}
+
+/* ─── Overrides directs (fallback haute spécificité) ─── */
+
+/* Dialog */
+.p-dialog,
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer,
+.p-confirmdialog,
+.p-confirmdialog .p-dialog-header,
+.p-confirmdialog .p-dialog-content,
+.p-confirmdialog .p-dialog-footer {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.p-dialog .p-dialog-header,
+.p-confirmdialog .p-dialog-header {
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
+
+.p-dialog .p-dialog-footer,
+.p-confirmdialog .p-dialog-footer {
+  border-top: 1px solid hsl(var(--border)) !important;
+}
+
+.p-dialog-header-icon,
+.p-dialog-header-icon:hover,
+.p-dialog-close-button {
+  color: hsl(var(--muted-foreground)) !important;
+  background: transparent !important;
+}
+
+.p-dialog-close-button:hover {
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Inputs */
+.p-inputtext {
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: var(--radius) !important;
+}
+
+.p-inputtext:enabled:hover {
+  border-color: hsl(var(--primary) / 0.5) !important;
+}
+
+.p-inputtext:enabled:focus {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12) !important;
+  outline: none !important;
+}
+
+.p-inputtext.ng-invalid.ng-dirty {
+  border-color: hsl(var(--destructive)) !important;
+}
+
+/* Textarea */
+textarea.p-inputtextarea,
+.p-textarea {
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: var(--radius) !important;
+  resize: vertical;
+}
+
+textarea.p-inputtextarea:enabled:hover,
+.p-textarea:enabled:hover {
+  border-color: hsl(var(--primary) / 0.5) !important;
+}
+
+textarea.p-inputtextarea:enabled:focus,
+.p-textarea:enabled:focus {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12) !important;
+  outline: none !important;
+}
+
+/* Select / Dropdown */
+.p-select,
+.p-dropdown {
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+  border-radius: var(--radius) !important;
+}
+
+.p-select-label,
+.p-dropdown-label {
+  color: hsl(var(--foreground)) !important;
+}
+
+.p-select-overlay,
+.p-dropdown-panel {
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 10px 30px -5px hsl(var(--foreground) / 0.1) !important;
+}
+
+.p-select-option,
+.p-dropdown-item {
+  color: hsl(var(--foreground)) !important;
+}
+
+.p-select-option:hover,
+.p-dropdown-item:hover,
+.p-select-option.p-focus,
+.p-dropdown-item.p-highlight {
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.p-select-option.p-selected,
+.p-dropdown-item.p-highlight.p-focus {
+  background: hsl(var(--primary) / 0.1) !important;
+  color: hsl(var(--primary)) !important;
+}
+
+/* DataTable */
+.p-datatable .p-datatable-header,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr,
+.p-datatable .p-datatable-tfoot > tr > td {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background: hsl(var(--muted)) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-row-odd {
+  background: hsl(var(--background)) !important;
+}
+
+.p-paginator {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.p-paginator .p-paginator-page,
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+  color: hsl(var(--foreground)) !important;
+  border-radius: var(--radius) !important;
+}
+
+.p-paginator .p-paginator-page.p-highlight {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+/* Tag / Badge */
+.p-tag {
+  border-radius: calc(var(--radius) * 0.75) !important;
+}
+
+/* Toast */
+.p-toast .p-toast-message {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+  border-radius: 1rem !important;
+  backdrop-filter: blur(12px);
+}
+
+.p-toast .p-toast-message.p-toast-message-success {
+  border-left: 4px solid hsl(var(--secondary)) !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+  border-left: 4px solid hsl(var(--destructive)) !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-warn {
+  border-left: 4px solid hsl(var(--highlight)) !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-info {
+  border-left: 4px solid hsl(var(--primary)) !important;
+}
+
+/* Checkbox */
+.p-checkbox .p-checkbox-box {
+  border-color: hsl(var(--border)) !important;
+  background: hsl(var(--background)) !important;
+  border-radius: calc(var(--radius) * 0.5) !important;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+  background: hsl(var(--primary)) !important;
+  border-color: hsl(var(--primary)) !important;
+}
+
+/* InputSwitch / ToggleSwitch */
+.p-inputswitch .p-inputswitch-slider,
+.p-toggleswitch .p-toggleswitch-slider {
+  background: hsl(var(--muted)) !important;
+  border-radius: 9999px !important;
+}
+
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider,
+.p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+  background: hsl(var(--primary)) !important;
+}

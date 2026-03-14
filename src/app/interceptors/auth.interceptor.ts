@@ -13,6 +13,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const isPublic = PUBLIC_URLS.some(url => req.url.includes(url));
   const token = authService.getToken();
 
+  // Token expiré : vider la session et rediriger avant même d'appeler le backend
+  if (!isPublic && token && authService.isTokenExpired()) {
+    authService.clearSession();
+    router.navigate(['/login']);
+    return throwError(() => new Error('Session expirée'));
+  }
+
   const authReq = token && !isPublic
     ? req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`)
